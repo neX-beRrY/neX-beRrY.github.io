@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beRrY的个人网页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .menu-section {
+            margin-bottom: 25px;
+        }
+        
+        .menu-section h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tag:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 主内容区样式 */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            width: 400px;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 0 10px;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6a11cb;
+            font-size: 18px;
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-btn {
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+        
+        .view-btn.active {
+            background: #6a11cb;
+            color: white;
+        }
+        
+        .add-note-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .add-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+        }
+        
+        /* 笔记卡片样式 */
+        .notes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .note-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .note-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .note-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .note-category {
+            background: #eef2ff;
+            color: #6a11cb;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        
+        .note-content {
+            padding: 20px;
+            font-size: 14px;
+            color: #555;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 70px;
+        }
+        
+        .note-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 0 20px 15px;
+        }
+        
+        .note-tag {
+            background: #f5f7fa;
+            color: #666;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .note-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+            border-top: 1px solid #f0f0f0;
+            gap: 15px;
+        }
+        
+        .note-action {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .note-action:hover {
+            color: #6a11cb;
+        }
+        
+        /* 列表视图样式 */
+        .list-view .notes-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .list-view .note-card {
+            display: flex;
+        }
+        
+        .list-view .note-header {
+            border-bottom: none;
+            border-right: 1px solid #f0f0f0;
+            min-width: 200px;
+        }
+        
+        .list-view .note-content {
+            flex: 1;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+            
+            .logo h1, .menu-section h3, .menu-item span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .logo i {
+                margin-right: 0;
+            }
+            
+            .menu-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            
+            .menu-item i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .tags {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .notes-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .list-view .note-card {
+                flex-direction: column;
+            }
+            
+            .list-view .note-header {
+                border-right: none;
+                border-bottom: 1px solid #f0f0f0;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .note-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>我的笔记空间</h1>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span>全部笔记</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-star"></i>
+                    <span>收藏笔记</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-clock"></i>
+                    <span>最近笔记</span>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <h3>分类</h3>
+                <div class="menu-item">
+                    <i class="fas fa-briefcase"></i>
+                    <span>工作</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>学习</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>灵感</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>任务</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-heart"></i>
+                    <span>个人</span>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <h3>标签</h3>
+                <div class="tags">
+                    <div class="tag">重要</div>
+                    <div class="tag">待办</div>
+                    <div class="tag">项目</div>
+                    <div class="tag">想法</div>
+                    <div class="tag">总结</div>
+                    <div class="tag">参考</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" placeholder="搜索笔记...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="view-options">
+                        <button class="view-btn active grid-view" title="网格视图">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn list-view-btn" title="列表视图">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    
+                    <button class="add-note-btn">
+                        <i class="fas fa-plus"></i>
+                        新建笔记
+                    </button>
+                </div>
+            </div>
+            
+            <div class="notes-container">
+                <!-- 笔记卡片1 -->
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-title">项目规划与时间安排</div>
+                        <div class="note-meta">
+                            <span>2023-10-15</span>
+                            <span class="note-category">工作</span>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        这个项目需要分为三个阶段完成。第一阶段是需求分析和设计，预计需要2周时间。第二阶段是开发实现，需要4周时间。第三阶段是测试和部署，需要2周时间。
+                    </div>
+                    <div class="note-tags">
+                        <span class="note-tag">项目</span>
+                        <span class="note-tag">重要</span>
+                        <span class="note-tag">时间管理</span>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-action"><i class="far fa-star"></i></button>
+                        <button class="note-action"><i class="far fa-edit"></i></button>
+                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+                
+                <!-- 笔记卡片2 -->
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-title">学习React Hooks要点</div>
+                        <div class="note-meta">
+                            <span>2023-10-12</span>
+                            <span class="note-category">学习</span>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        useState: 用于在函数组件中添加状态。useEffect: 用于处理副作用，类似于生命周期方法。useContext: 用于在组件之间共享状态。
+                    </div>
+                    <div class="note-tags">
+                        <span class="note-tag">React</span>
+                        <span class="note-tag">前端</span>
+                        <span class="note-tag">JavaScript</span>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-action"><i class="fas fa-star"></i></button>
+                        <button class="note-action"><i class="far fa-edit"></i></button>
+                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+                
+                <!-- 笔记卡片3 -->
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-title">读书笔记 - 《深度工作》</div>
+                        <div class="note-meta">
+                            <span>2023-10-08</span>
+                            <span class="note-category">个人</span>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        深度工作是指在无干扰的状态下进行专注的职业活动，这种努力能够创造新价值，提升技能，而且难以复制。浅工作则是对认知要求不高的事务性任务，往往在受到干扰的情况下开展。
+                    </div>
+                    <div class="note-tags">
+                        <span class="note-tag">读书</span>
+                        <span class="note-tag">效率</span>
+                        <span class="note-tag">总结</span>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-action"><i class="far fa-star"></i></button>
+                        <button class="note-action"><i class="far fa-edit"></i></button>
+                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+                
+                <!-- 笔记卡片4 -->
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-title">产品设计灵感收集</div>
+                        <div class="note-meta">
+                            <span>2023-10-05</span>
+                            <span class="note-category">灵感</span>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        1. 暗色模式切换动画效果。2. 语音控制界面交互。3. 3D产品展示功能。4. 个性化推荐算法优化。5. 无障碍访问功能增强。
+                    </div>
+                    <div class="note-tags">
+                        <span class="note-tag">UI设计</span>
+                        <span class="note-tag">创新</span>
+                        <span class="note-tag">想法</span>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-action"><i class="far fa-star"></i></button>
+                        <button class="note-action"><i class="far fa-edit"></i></button>
+                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+                
+                <!-- 笔记卡片5 -->
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-title">本周任务清单</div>
+                        <div class="note-meta">
+                            <span>2023-10-02</span>
+                            <span class="note-category">任务</span>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        - 完成项目报告初稿<br>- 准备团队会议材料<br>- 学习新框架的基础知识<br>- 整理项目文档<br>- 与设计团队沟通需求
+                    </div>
+                    <div class="note-tags">
+                        <span class="note-tag">待办</span>
+                        <span class="note-tag">重要</span>
+                        <span class="note-tag">周计划</span>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-action"><i class="far fa-star"></i></button>
+                        <button class="note-action"><i class="far fa-edit"></i></button>
+                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+                
+                <!-- 笔记卡片6 -->
+                <div class="note-card">
+                    <div class="note-header">
+                        <div class="note-title">CSS Grid布局技巧</div>
+                        <div class="note-meta">
+                            <span>2023-09-28</span>
+                            <span class="note-category">学习</span>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        Grid布局是CSS中强大的二维布局系统。使用fr单位可以创建灵活的网格轨道。grid-template-areas属性可以直观地定义布局结构。minmax()函数可以设置轨道大小的范围。
+                    </div>
+                    <div class="note-tags">
+                        <span class="note-tag">CSS</span>
+                        <span class="note-tag">布局</span>
+                        <span class="note-tag">前端</span>
+                    </div>
+                    <div class="note-actions">
+                        <button class="note-action"><i class="far fa-star"></i></button>
+                        <button class="note-action"><i class="far fa-edit"></i></button>
+                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换视图模式
+        document.querySelector('.grid-view').addEventListener('click', function() {
+            document.querySelector('.notes-container').classList.remove('list-view');
+            document.querySelector('.grid-view').classList.add('active');
+            document.querySelector('.list-view-btn').classList.remove('active');
+        });
+        
+        document.querySelector('.list-view-btn').addEventListener('click', function() {
+            document.querySelector('.notes-container').classList.add('list-view');
+            document.querySelector('.list-view-btn').classList.add('active');
+            document.querySelector('.grid-view').classList.remove('active');
+        });
+        
+        // 收藏功能
+        document.querySelectorAll('.note-action .fa-star').forEach(star => {
+            star.addEventListener('click', function() {
+                if (this.classList.contains('far')) {
+                    this.classList.remove('far');
+                    this.classList.add('fas');
+                } else {
+                    this.classList.remove('fas');
+                    this.classList.add('far');
+                }
+            });
+        });
+        
+        // 搜索功能
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const noteCards = document.querySelectorAll('.note-card');
+            
+            noteCards.forEach(card => {
+                const title = card.querySelector('.note-title').textContent.toLowerCase();
+                const content = card.querySelector('.note-content').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        // 侧边栏菜单项点击效果
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
