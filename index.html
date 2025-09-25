@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>beRrY的个人网页</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,372 +12,389 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
+
+        :root {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
+        body {
+            background: linear-gradient(135deg, var(--light-color) 0%, #e2e6ea 100%);
+            min-height: 100vh;
+            display: flex;
+            color: var(--dark-color);
+        }
+
         .container {
             display: flex;
-            min-height: 100vh;
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            height: calc(100vh - 40px);
         }
-        
+
         /* 侧边栏样式 */
         .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            width: 280px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 20px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
             transition: all 0.3s ease;
-            z-index: 1000;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
             margin-bottom: 30px;
-            padding-bottom: 15px;
+            padding-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .logo i {
-            font-size: 24px;
+            font-size: 28px;
             margin-right: 10px;
         }
-        
+
         .logo h1 {
             font-size: 22px;
             font-weight: 600;
         }
-        
-        .menu-section {
+
+        .search-box {
+            position: relative;
             margin-bottom: 25px;
         }
-        
-        .menu-section h3 {
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
             font-size: 14px;
-            text-transform: uppercase;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .categories h3, .notes-list h3 {
+            font-size: 16px;
             margin-bottom: 15px;
-            opacity: 0.7;
-            letter-spacing: 1px;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .menu-item i {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-        
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        
-        .tag {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .tag:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* 主内容区样式 */
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s ease;
-        }
-        
-        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .add-category {
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .add-category:hover {
+            opacity: 1;
+        }
+
+        .category-list {
+            list-style: none;
             margin-bottom: 30px;
         }
-        
-        .search-bar {
-            display: flex;
-            background: white;
-            border-radius: 50px;
-            padding: 10px 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            width: 400px;
-        }
-        
-        .search-bar input {
-            border: none;
-            outline: none;
-            flex: 1;
-            padding: 0 10px;
-            font-size: 16px;
-        }
-        
-        .search-bar button {
-            background: none;
-            border: none;
+
+        .category-item {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             cursor: pointer;
-            color: #6a11cb;
-            font-size: 18px;
-        }
-        
-        .view-options {
             display: flex;
-            gap: 10px;
-        }
-        
-        .view-btn {
-            background: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.2s;
         }
-        
-        .view-btn.active {
-            background: #6a11cb;
-            color: white;
+
+        .category-item:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
-        
-        .add-note-btn {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 16px;
+
+        .category-item.active {
+            background: rgba(255, 255, 255, 0.2);
             font-weight: 600;
+        }
+
+        .category-item .count {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .notes-list {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
         }
-        
-        .add-note-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+
+        .note-item:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
-        
-        /* 笔记卡片样式 */
-        .notes-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+
+        .note-item.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-left: 3px solid white;
         }
-        
-        .note-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .note-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .note-header {
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
+
         .note-title {
-            font-size: 18px;
             font-weight: 600;
             margin-bottom: 5px;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
-        
+
+        .note-preview {
+            font-size: 13px;
+            opacity: 0.8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .note-date {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* 主内容区样式 */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .toolbar {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            background: white;
+        }
+
+        .toolbar h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .toolbar-actions button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .toolbar-actions button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .toolbar-actions button i {
+            margin-right: 8px;
+        }
+
+        .editor-container {
+            flex-grow: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .note-editor {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .note-title-input {
+            border: none;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid #eee;
+            outline: none;
+        }
+
+        .note-content {
+            flex-grow: 1;
+            border: none;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            padding: 10px 0;
+        }
+
         .note-meta {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            color: #888;
-        }
-        
-        .note-category {
-            background: #eef2ff;
-            color: #6a11cb;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-        
-        .note-content {
-            padding: 20px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
             font-size: 14px;
-            color: #555;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            min-height: 70px;
+            color: #6c757d;
         }
-        
-        .note-tags {
+
+        .empty-state {
             display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            padding: 0 20px 15px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #6c757d;
         }
-        
-        .note-tag {
-            background: #f5f7fa;
-            color: #666;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
+
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
-        
-        .note-actions {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px 20px;
-            border-top: 1px solid #f0f0f0;
-            gap: 15px;
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-        
-        .note-action {
-            background: none;
-            border: none;
-            color: #888;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
+
+        .empty-state p {
+            font-size: 16px;
+            max-width: 400px;
         }
-        
-        .note-action:hover {
-            color: #6a11cb;
-        }
-        
-        /* 列表视图样式 */
-        .list-view .notes-container {
-            grid-template-columns: 1fr;
-        }
-        
-        .list-view .note-card {
-            display: flex;
-        }
-        
-        .list-view .note-header {
-            border-bottom: none;
-            border-right: 1px solid #f0f0f0;
-            min-width: 200px;
-        }
-        
-        .list-view .note-content {
-            flex: 1;
-        }
-        
+
         /* 响应式设计 */
         @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            
             .sidebar {
-                width: 70px;
-                padding: 20px 10px;
-            }
-            
-            .logo h1, .menu-section h3, .menu-item span {
-                display: none;
-            }
-            
-            .logo {
-                justify-content: center;
-            }
-            
-            .logo i {
-                margin-right: 0;
-            }
-            
-            .menu-item {
-                justify-content: center;
-                padding: 15px 0;
-            }
-            
-            .menu-item i {
-                margin-right: 0;
-                font-size: 20px;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-            
-            .tags {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-            
-            .search-bar {
                 width: 100%;
+                height: auto;
             }
             
-            .notes-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .list-view .note-card {
-                flex-direction: column;
-            }
-            
-            .list-view .note-header {
-                border-right: none;
-                border-bottom: 1px solid #f0f0f0;
+            .notes-list {
+                max-height: 300px;
             }
         }
-        
+
         /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        .note-card {
-            animation: fadeIn 0.5s ease-out;
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: var(--dark-color);
         }
     </style>
 </head>
@@ -386,289 +403,373 @@
         <!-- 侧边栏 -->
         <div class="sidebar">
             <div class="logo">
-                <i class="fas fa-book-open"></i>
-                <h1>我的笔记空间</h1>
+                <i class="fas fa-book"></i>
+                <h1>我的笔记</h1>
             </div>
             
-            <div class="menu-section">
-                <div class="menu-item active">
-                    <i class="fas fa-home"></i>
-                    <span>全部笔记</span>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-star"></i>
-                    <span>收藏笔记</span>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-clock"></i>
-                    <span>最近笔记</span>
-                </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="搜索笔记...">
             </div>
             
-            <div class="menu-section">
-                <h3>分类</h3>
-                <div class="menu-item">
-                    <i class="fas fa-briefcase"></i>
-                    <span>工作</span>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>学习</span>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>灵感</span>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-tasks"></i>
-                    <span>任务</span>
-                </div>
-                <div class="menu-item">
-                    <i class="fas fa-heart"></i>
-                    <span>个人</span>
-                </div>
+            <div class="categories">
+                <h3>分类 <span class="add-category" id="add-category-btn"><i class="fas fa-plus"></i> 添加</span></h3>
+                <ul class="category-list" id="category-list">
+                    <!-- 分类将通过JS动态生成 -->
+                </ul>
             </div>
             
-            <div class="menu-section">
-                <h3>标签</h3>
-                <div class="tags">
-                    <div class="tag">重要</div>
-                    <div class="tag">待办</div>
-                    <div class="tag">项目</div>
-                    <div class="tag">想法</div>
-                    <div class="tag">总结</div>
-                    <div class="tag">参考</div>
+            <div class="notes-list">
+                <h3>最近笔记</h3>
+                <div id="notes-container">
+                    <!-- 笔记列表将通过JS动态生成 -->
                 </div>
             </div>
         </div>
         
         <!-- 主内容区 -->
         <div class="main-content">
-            <div class="header">
-                <div class="search-bar">
-                    <input type="text" placeholder="搜索笔记...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-                
-                <div class="header-actions">
-                    <div class="view-options">
-                        <button class="view-btn active grid-view" title="网格视图">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button class="view-btn list-view-btn" title="列表视图">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                    
-                    <button class="add-note-btn">
-                        <i class="fas fa-plus"></i>
-                        新建笔记
-                    </button>
+            <div class="toolbar">
+                <h2 id="current-category">所有笔记</h2>
+                <div class="toolbar-actions">
+                    <button id="new-note-btn"><i class="fas fa-plus"></i> 新建笔记</button>
                 </div>
             </div>
             
-            <div class="notes-container">
-                <!-- 笔记卡片1 -->
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-title">项目规划与时间安排</div>
-                        <div class="note-meta">
-                            <span>2023-10-15</span>
-                            <span class="note-category">工作</span>
-                        </div>
-                    </div>
-                    <div class="note-content">
-                        这个项目需要分为三个阶段完成。第一阶段是需求分析和设计，预计需要2周时间。第二阶段是开发实现，需要4周时间。第三阶段是测试和部署，需要2周时间。
-                    </div>
-                    <div class="note-tags">
-                        <span class="note-tag">项目</span>
-                        <span class="note-tag">重要</span>
-                        <span class="note-tag">时间管理</span>
-                    </div>
-                    <div class="note-actions">
-                        <button class="note-action"><i class="far fa-star"></i></button>
-                        <button class="note-action"><i class="far fa-edit"></i></button>
-                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
+            <div class="editor-container">
+                <div class="note-editor" id="note-editor">
+                    <input type="text" class="note-title-input" id="note-title" placeholder="笔记标题">
+                    <textarea class="note-content" id="note-content" placeholder="开始输入笔记内容..."></textarea>
+                    <div class="note-meta">
+                        <div>最后编辑: <span id="last-edited">-</span></div>
+                        <div>字数: <span id="word-count">0</span></div>
                     </div>
                 </div>
                 
-                <!-- 笔记卡片2 -->
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-title">学习React Hooks要点</div>
-                        <div class="note-meta">
-                            <span>2023-10-12</span>
-                            <span class="note-category">学习</span>
-                        </div>
-                    </div>
-                    <div class="note-content">
-                        useState: 用于在函数组件中添加状态。useEffect: 用于处理副作用，类似于生命周期方法。useContext: 用于在组件之间共享状态。
-                    </div>
-                    <div class="note-tags">
-                        <span class="note-tag">React</span>
-                        <span class="note-tag">前端</span>
-                        <span class="note-tag">JavaScript</span>
-                    </div>
-                    <div class="note-actions">
-                        <button class="note-action"><i class="fas fa-star"></i></button>
-                        <button class="note-action"><i class="far fa-edit"></i></button>
-                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
-                    </div>
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-sticky-note"></i>
+                    <h3>还没有笔记</h3>
+                    <p>点击"新建笔记"按钮开始创建您的第一个笔记，或从左侧选择现有笔记进行编辑。</p>
                 </div>
-                
-                <!-- 笔记卡片3 -->
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-title">读书笔记 - 《深度工作》</div>
-                        <div class="note-meta">
-                            <span>2023-10-08</span>
-                            <span class="note-category">个人</span>
-                        </div>
-                    </div>
-                    <div class="note-content">
-                        深度工作是指在无干扰的状态下进行专注的职业活动，这种努力能够创造新价值，提升技能，而且难以复制。浅工作则是对认知要求不高的事务性任务，往往在受到干扰的情况下开展。
-                    </div>
-                    <div class="note-tags">
-                        <span class="note-tag">读书</span>
-                        <span class="note-tag">效率</span>
-                        <span class="note-tag">总结</span>
-                    </div>
-                    <div class="note-actions">
-                        <button class="note-action"><i class="far fa-star"></i></button>
-                        <button class="note-action"><i class="far fa-edit"></i></button>
-                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
-                    </div>
-                </div>
-                
-                <!-- 笔记卡片4 -->
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-title">产品设计灵感收集</div>
-                        <div class="note-meta">
-                            <span>2023-10-05</span>
-                            <span class="note-category">灵感</span>
-                        </div>
-                    </div>
-                    <div class="note-content">
-                        1. 暗色模式切换动画效果。2. 语音控制界面交互。3. 3D产品展示功能。4. 个性化推荐算法优化。5. 无障碍访问功能增强。
-                    </div>
-                    <div class="note-tags">
-                        <span class="note-tag">UI设计</span>
-                        <span class="note-tag">创新</span>
-                        <span class="note-tag">想法</span>
-                    </div>
-                    <div class="note-actions">
-                        <button class="note-action"><i class="far fa-star"></i></button>
-                        <button class="note-action"><i class="far fa-edit"></i></button>
-                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
-                    </div>
-                </div>
-                
-                <!-- 笔记卡片5 -->
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-title">本周任务清单</div>
-                        <div class="note-meta">
-                            <span>2023-10-02</span>
-                            <span class="note-category">任务</span>
-                        </div>
-                    </div>
-                    <div class="note-content">
-                        - 完成项目报告初稿<br>- 准备团队会议材料<br>- 学习新框架的基础知识<br>- 整理项目文档<br>- 与设计团队沟通需求
-                    </div>
-                    <div class="note-tags">
-                        <span class="note-tag">待办</span>
-                        <span class="note-tag">重要</span>
-                        <span class="note-tag">周计划</span>
-                    </div>
-                    <div class="note-actions">
-                        <button class="note-action"><i class="far fa-star"></i></button>
-                        <button class="note-action"><i class="far fa-edit"></i></button>
-                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
-                    </div>
-                </div>
-                
-                <!-- 笔记卡片6 -->
-                <div class="note-card">
-                    <div class="note-header">
-                        <div class="note-title">CSS Grid布局技巧</div>
-                        <div class="note-meta">
-                            <span>2023-09-28</span>
-                            <span class="note-category">学习</span>
-                        </div>
-                    </div>
-                    <div class="note-content">
-                        Grid布局是CSS中强大的二维布局系统。使用fr单位可以创建灵活的网格轨道。grid-template-areas属性可以直观地定义布局结构。minmax()函数可以设置轨道大小的范围。
-                    </div>
-                    <div class="note-tags">
-                        <span class="note-tag">CSS</span>
-                        <span class="note-tag">布局</span>
-                        <span class="note-tag">前端</span>
-                    </div>
-                    <div class="note-actions">
-                        <button class="note-action"><i class="far fa-star"></i></button>
-                        <button class="note-action"><i class="far fa-edit"></i></button>
-                        <button class="note-action"><i class="fas fa-share-alt"></i></button>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加分类模态框 -->
+    <div class="modal" id="category-modal">
+        <div class="modal-content">
+            <h3>添加新分类</h3>
+            <input type="text" id="category-name" placeholder="输入分类名称">
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancel-category">取消</button>
+                <button class="btn-primary" id="save-category">保存</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 切换视图模式
-        document.querySelector('.grid-view').addEventListener('click', function() {
-            document.querySelector('.notes-container').classList.remove('list-view');
-            document.querySelector('.grid-view').classList.add('active');
-            document.querySelector('.list-view-btn').classList.remove('active');
-        });
+        // 示例数据
+        let notes = JSON.parse(localStorage.getItem('notes')) || [
+            {
+                id: 1,
+                title: '欢迎使用笔记应用',
+                content: '这是一个功能完善的个人笔记管理应用。\n\n您可以：\n• 创建新的笔记\n• 将笔记分类管理\n• 搜索笔记内容\n• 编辑和删除笔记\n\n开始记录您的想法和重要信息吧！',
+                category: '默认',
+                lastEdited: '2023-06-15 10:30',
+                wordCount: 85
+            },
+            {
+                id: 2,
+                title: '项目计划',
+                content: '项目目标：\n- 完成前端界面设计\n- 实现核心功能模块\n- 进行用户测试\n- 发布正式版本\n\n时间安排：\n第一周：设计阶段\n第二周：开发阶段\n第三周：测试阶段\n第四周：发布阶段',
+                category: '工作',
+                lastEdited: '2023-06-14 16:45',
+                wordCount: 56
+            },
+            {
+                id: 3,
+                title: '购物清单',
+                content: '食品：\n- 牛奶\n- 鸡蛋\n- 面包\n- 水果\n\n家居用品：\n- 洗衣液\n- 纸巾\n- 清洁用品',
+                category: '个人',
+                lastEdited: '2023-06-13 09:20',
+                wordCount: 25
+            }
+        ];
         
-        document.querySelector('.list-view-btn').addEventListener('click', function() {
-            document.querySelector('.notes-container').classList.add('list-view');
-            document.querySelector('.list-view-btn').classList.add('active');
-            document.querySelector('.grid-view').classList.remove('active');
-        });
+        let categories = JSON.parse(localStorage.getItem('categories')) || ['默认', '工作', '个人', '学习'];
+        let currentNoteId = null;
+        let currentCategory = '所有笔记';
         
-        // 收藏功能
-        document.querySelectorAll('.note-action .fa-star').forEach(star => {
-            star.addEventListener('click', function() {
-                if (this.classList.contains('far')) {
-                    this.classList.remove('far');
-                    this.classList.add('fas');
-                } else {
-                    this.classList.remove('fas');
-                    this.classList.add('far');
-                }
-            });
-        });
+        // DOM元素
+        const categoryList = document.getElementById('category-list');
+        const notesContainer = document.getElementById('notes-container');
+        const noteEditor = document.getElementById('note-editor');
+        const emptyState = document.getElementById('empty-state');
+        const noteTitle = document.getElementById('note-title');
+        const noteContent = document.getElementById('note-content');
+        const lastEdited = document.getElementById('last-edited');
+        const wordCount = document.getElementById('word-count');
+        const currentCategoryElement = document.getElementById('current-category');
+        const searchInput = document.getElementById('search-input');
+        const newNoteBtn = document.getElementById('new-note-btn');
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        const categoryModal = document.getElementById('category-modal');
+        const categoryNameInput = document.getElementById('category-name');
+        const cancelCategoryBtn = document.getElementById('cancel-category');
+        const saveCategoryBtn = document.getElementById('save-category');
         
-        // 搜索功能
-        const searchInput = document.querySelector('.search-bar input');
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const noteCards = document.querySelectorAll('.note-card');
+        // 初始化应用
+        function initApp() {
+            renderCategories();
+            renderNotes();
+            updateUI();
             
-            noteCards.forEach(card => {
-                const title = card.querySelector('.note-title').textContent.toLowerCase();
-                const content = card.querySelector('.note-content').textContent.toLowerCase();
+            // 设置事件监听器
+            setupEventListeners();
+        }
+        
+        // 渲染分类列表
+        function renderCategories() {
+            categoryList.innerHTML = '';
+            
+            // 添加"所有笔记"分类
+            const allNotesItem = document.createElement('li');
+            allNotesItem.className = `category-item ${currentCategory === '所有笔记' ? 'active' : ''}`;
+            allNotesItem.innerHTML = `
+                <span>所有笔记</span>
+                <span class="count">${notes.length}</span>
+            `;
+            allNotesItem.addEventListener('click', () => filterNotesByCategory('所有笔记'));
+            categoryList.appendChild(allNotesItem);
+            
+            // 添加其他分类
+            categories.forEach(category => {
+                const categoryNotes = notes.filter(note => note.category === category);
+                const categoryItem = document.createElement('li');
+                categoryItem.className = `category-item ${currentCategory === category ? 'active' : ''}`;
+                categoryItem.innerHTML = `
+                    <span>${category}</span>
+                    <span class="count">${categoryNotes.length}</span>
+                `;
+                categoryItem.addEventListener('click', () => filterNotesByCategory(category));
+                categoryList.appendChild(categoryItem);
+            });
+        }
+        
+        // 渲染笔记列表
+        function renderNotes(filteredNotes = null) {
+            const notesToRender = filteredNotes || notes;
+            notesContainer.innerHTML = '';
+            
+            if (notesToRender.length === 0) {
+                notesContainer.innerHTML = '<p style="text-align: center; padding: 20px; opacity: 0.7;">没有找到笔记</p>';
+                return;
+            }
+            
+            notesToRender.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = `note-item ${currentNoteId === note.id ? 'active' : ''}`;
+                noteElement.innerHTML = `
+                    <div class="note-title">${note.title}</div>
+                    <div class="note-preview">${note.content.substring(0, 50)}...</div>
+                    <div class="note-date">${note.lastEdited}</div>
+                `;
+                noteElement.addEventListener('click', () => openNote(note.id));
+                notesContainer.appendChild(noteElement);
+            });
+        }
+        
+        // 按分类过滤笔记
+        function filterNotesByCategory(category) {
+            currentCategory = category;
+            currentCategoryElement.textContent = category;
+            
+            // 更新分类列表的激活状态
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (category === '所有笔记') {
+                document.querySelectorAll('.category-item')[0].classList.add('active');
+                renderNotes();
+            } else {
+                const categoryItems = document.querySelectorAll('.category-item');
+                for (let i = 0; i < categoryItems.length; i++) {
+                    if (categoryItems[i].textContent.includes(category)) {
+                        categoryItems[i].classList.add('active');
+                        break;
+                    }
+                }
                 
-                if (title.includes(searchTerm) || content.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
+                const filteredNotes = notes.filter(note => note.category === category);
+                renderNotes(filteredNotes);
+            }
+            
+            // 如果没有选中笔记，显示空状态
+            if (!currentNoteId) {
+                updateUI();
+            }
+        }
+        
+        // 打开笔记
+        function openNote(noteId) {
+            currentNoteId = noteId;
+            const note = notes.find(note => note.id === noteId);
+            
+            if (note) {
+                noteTitle.value = note.title;
+                noteContent.value = note.content;
+                lastEdited.textContent = note.lastEdited;
+                wordCount.textContent = note.wordCount;
+                
+                // 更新笔记列表的激活状态
+                document.querySelectorAll('.note-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.note-item').forEach(item => {
+                    if (item.querySelector('.note-title').textContent === note.title) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                updateUI();
+            }
+        }
+        
+        // 创建新笔记
+        function createNewNote() {
+            const newNote = {
+                id: Date.now(),
+                title: '新笔记',
+                content: '',
+                category: currentCategory === '所有笔记' ? categories[0] : currentCategory,
+                lastEdited: new Date().toLocaleDateString('zh-CN') + ' ' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'}),
+                wordCount: 0
+            };
+            
+            notes.unshift(newNote);
+            saveNotes();
+            renderCategories();
+            filterNotesByCategory(currentCategory);
+            openNote(newNote.id);
+            
+            // 聚焦到标题输入框
+            setTimeout(() => {
+                noteTitle.focus();
+                noteTitle.select();
+            }, 100);
+        }
+        
+        // 保存笔记
+        function saveNote() {
+            if (!currentNoteId) return;
+            
+            const noteIndex = notes.findIndex(note => note.id === currentNoteId);
+            if (noteIndex !== -1) {
+                notes[noteIndex].title = noteTitle.value;
+                notes[noteIndex].content = noteContent.value;
+                notes[noteIndex].lastEdited = new Date().toLocaleDateString('zh-CN') + ' ' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
+                notes[noteIndex].wordCount = noteContent.value.length;
+                
+                saveNotes();
+                renderCategories();
+                renderNotes();
+            }
+        }
+        
+        // 添加新分类
+        function addNewCategory() {
+            const categoryName = categoryNameInput.value.trim();
+            if (categoryName && !categories.includes(categoryName)) {
+                categories.push(categoryName);
+                saveCategories();
+                renderCategories();
+                categoryModal.style.display = 'none';
+                categoryNameInput.value = '';
+            }
+        }
+        
+        // 搜索笔记
+        function searchNotes() {
+            const query = searchInput.value.toLowerCase();
+            if (query === '') {
+                renderNotes();
+                return;
+            }
+            
+            const filteredNotes = notes.filter(note => 
+                note.title.toLowerCase().includes(query) || 
+                note.content.toLowerCase().includes(query)
+            );
+            
+            renderNotes(filteredNotes);
+        }
+        
+        // 更新UI状态
+        function updateUI() {
+            if (currentNoteId) {
+                noteEditor.style.display = 'flex';
+                emptyState.style.display = 'none';
+            } else {
+                noteEditor.style.display = 'none';
+                emptyState.style.display = 'flex';
+            }
+        }
+        
+        // 保存笔记到本地存储
+        function saveNotes() {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+        
+        // 保存分类到本地存储
+        function saveCategories() {
+            localStorage.setItem('categories', JSON.stringify(categories));
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 笔记标题和内容输入事件
+            noteTitle.addEventListener('input', saveNote);
+            noteContent.addEventListener('input', saveNote);
+            
+            // 新建笔记按钮
+            newNoteBtn.addEventListener('click', createNewNote);
+            
+            // 搜索功能
+            searchInput.addEventListener('input', searchNotes);
+            
+            // 分类管理
+            addCategoryBtn.addEventListener('click', () => {
+                categoryModal.style.display = 'flex';
+                categoryNameInput.focus();
+            });
+            
+            cancelCategoryBtn.addEventListener('click', () => {
+                categoryModal.style.display = 'none';
+                categoryNameInput.value = '';
+            });
+            
+            saveCategoryBtn.addEventListener('click', addNewCategory);
+            
+            // 点击模态框外部关闭
+            categoryModal.addEventListener('click', (e) => {
+                if (e.target === categoryModal) {
+                    categoryModal.style.display = 'none';
+                    categoryNameInput.value = '';
                 }
             });
-        });
-        
-        // 侧边栏菜单项点击效果
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.menu-item').forEach(i => {
-                    i.classList.remove('active');
-                });
-                this.classList.add('active');
+            
+            // 按Enter键保存分类
+            categoryNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addNewCategory();
+                }
             });
-        });
+        }
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
