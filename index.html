@@ -9,6 +9,8 @@
     <!-- KaTeX 数学公式支持 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #1a1a1a;
@@ -17,6 +19,7 @@
             --accent-color: #4a90e2;
             --border-color: #404040;
             --hover-color: #3a3a3a;
+            --danger-color: #e74c3c;
         }
         
         * {
@@ -36,7 +39,7 @@
         
         /* 侧边栏样式 */
         .sidebar {
-            width: 300px;
+            width: 320px;
             background-color: var(--sidebar-bg);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -71,6 +74,7 @@
             margin-bottom: 2px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             transition: background-color 0.2s;
         }
         
@@ -87,6 +91,14 @@
             font-size: 14px;
         }
         
+        .category-item .actions {
+            display: none;
+        }
+        
+        .category-item:hover .actions {
+            display: flex;
+        }
+        
         .category-children {
             margin-left: 20px;
             display: none;
@@ -94,6 +106,57 @@
         
         .category-item.expanded > .category-children {
             display: block;
+        }
+        
+        .notes-list {
+            margin-top: 10px;
+            margin-left: 20px;
+            display: none;
+        }
+        
+        .category-item.expanded > .notes-list {
+            display: block;
+        }
+        
+        .note-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.2s;
+        }
+        
+        .note-item:hover {
+            background-color: var(--hover-color);
+        }
+        
+        .note-item.active {
+            background-color: var(--accent-color);
+        }
+        
+        .note-item .note-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .note-item .note-title {
+            font-weight: bold;
+        }
+        
+        .note-item .note-date {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .note-item .actions {
+            display: none;
+        }
+        
+        .note-item:hover .actions {
+            display: flex;
         }
         
         /* 主内容区域 */
@@ -135,17 +198,28 @@
             padding: 20px;
             overflow-y: auto;
             border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
         }
         
         .preview-panel {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
         
         textarea {
             width: 100%;
-            height: 100%;
+            flex: 1;
             background-color: var(--bg-color);
             color: var(--text-color);
             border: 1px solid var(--border-color);
@@ -161,7 +235,7 @@
             background-color: var(--bg-color);
             padding: 15px;
             border-radius: 4px;
-            height: 100%;
+            flex: 1;
             overflow-y: auto;
         }
         
@@ -174,6 +248,9 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .btn:hover {
@@ -188,6 +265,19 @@
         
         .btn-outline:hover {
             background-color: rgba(74, 144, 226, 0.1);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.8rem;
         }
         
         /* 响应式设计 */
@@ -279,14 +369,55 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        
+        /* 空状态样式 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #888;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* 语法提示 */
+        .syntax-help {
+            background-color: var(--sidebar-bg);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .syntax-help summary {
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        
+        .syntax-help table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .syntax-help td {
+            padding: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
     </style>
 </head>
 <body>
     <!-- 侧边栏 -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2>我的笔记</h2>
-            <button class="btn" id="new-category-btn">新建分类</button>
+            <h2><i class="fas fa-book"></i> 我的笔记</h2>
+            <button class="btn" id="new-category-btn"><i class="fas fa-folder-plus"></i> 新建分类</button>
         </div>
         <div class="sidebar-content">
             <ul class="category-tree" id="category-tree">
@@ -299,11 +430,11 @@
     <div class="main-content">
         <div class="toolbar">
             <div>
-                <button class="btn" id="new-note-btn">新建笔记</button>
-                <button class="btn btn-outline" id="save-note-btn">保存笔记</button>
+                <button class="btn" id="new-note-btn"><i class="fas fa-plus"></i> 新建笔记</button>
+                <button class="btn" id="save-note-btn"><i class="fas fa-save"></i> 保存笔记</button>
             </div>
             <div>
-                <button class="btn btn-outline" id="toggle-preview-btn">切换预览</button>
+                <button class="btn btn-outline" id="toggle-preview-btn"><i class="fas fa-eye"></i> 切换预览</button>
             </div>
         </div>
         
@@ -311,10 +442,33 @@
         
         <div class="editor-container">
             <div class="editor-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-edit"></i> 编辑器</h3>
+                    <span>Markdown + KaTeX</span>
+                </div>
                 <textarea id="note-editor" placeholder="开始编写您的笔记...支持Markdown和LaTeX语法"></textarea>
+                <div class="syntax-help">
+                    <details>
+                        <summary>语法提示</summary>
+                        <table>
+                            <tr><td># 标题</td><td>**粗体**</td><td>*斜体*</td></tr>
+                            <tr><td>- 列表</td><td>[链接](URL)</td><td>`代码`</td></tr>
+                            <tr><td>$$公式$$</td><td>> 引用</td><td>--- 分割线</td></tr>
+                        </table>
+                    </details>
+                </div>
             </div>
             <div class="preview-panel">
-                <div class="preview" id="note-preview"></div>
+                <div class="panel-header">
+                    <h3><i class="fas fa-file-alt"></i> 预览</h3>
+                    <span id="last-modified">最后编辑: --</span>
+                </div>
+                <div class="preview" id="note-preview">
+                    <div class="empty-state">
+                        <i class="fas fa-sticky-note"></i>
+                        <p>选择或创建笔记开始编辑</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -337,6 +491,23 @@
                 </select>
             </div>
             <button class="btn" id="create-category-btn">创建</button>
+        </div>
+    </div>
+    
+    <!-- 删除确认模态窗口 -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="delete-title">确认删除</h3>
+                <span class="modal-close" id="close-delete-modal">&times;</span>
+            </div>
+            <div class="form-group">
+                <p id="delete-message">您确定要删除此项吗？此操作不可撤销。</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-danger" id="confirm-delete-btn">删除</button>
+                <button class="btn btn-outline" id="cancel-delete-btn">取消</button>
+            </div>
         </div>
     </div>
     
@@ -444,6 +615,11 @@
             // 获取顶级分类
             const topLevelCategories = notesData.categories.filter(cat => cat.parentId === null);
             
+            if (topLevelCategories.length === 0) {
+                treeContainer.innerHTML = '<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无分类，点击"新建分类"开始</p></div>';
+                return;
+            }
+            
             // 递归渲染分类
             topLevelCategories.forEach(category => {
                 const categoryElement = createCategoryElement(category);
@@ -460,18 +636,25 @@
             }
             
             li.innerHTML = `
-                <span class="icon">${category.children.length > 0 ? '📁' : '📄'}</span>
-                <span class="category-name">${category.name}</span>
+                <div style="display: flex; align-items: center;">
+                    <span class="icon">${category.children.length > 0 ? '📁' : '📄'}</span>
+                    <span class="category-name">${category.name}</span>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-sm btn-outline add-note-btn" title="添加笔记"><i class="fas fa-plus"></i></button>
+                    <button class="btn btn-sm btn-outline add-category-btn" title="添加子分类"><i class="fas fa-folder-plus"></i></button>
+                    <button class="btn btn-sm btn-danger delete-category-btn" title="删除分类"><i class="fas fa-trash"></i></button>
+                </div>
             `;
             
             li.dataset.categoryId = category.id;
             
             // 点击分类事件
-            li.addEventListener('click', function(e) {
+            li.querySelector('.category-name').addEventListener('click', function(e) {
                 e.stopPropagation();
                 
                 // 切换展开/折叠
-                if (category.children.length > 0) {
+                if (category.children.length > 0 || category.notes.length > 0) {
                     li.classList.toggle('expanded');
                 }
                 
@@ -484,8 +667,31 @@
                 });
                 li.classList.add('active');
                 
-                // 显示该分类下的笔记列表（简化版，实际应用中可能需要弹出菜单）
-                console.log(`切换到分类: ${category.name}`);
+                // 如果有笔记，显示第一个
+                if (category.notes.length > 0) {
+                    displayNote(category.notes[0]);
+                } else {
+                    // 清空编辑器
+                    clearEditor();
+                }
+            });
+            
+            // 添加笔记按钮
+            li.querySelector('.add-note-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                createNewNote(category.id);
+            });
+            
+            // 添加子分类按钮
+            li.querySelector('.add-category-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showCategoryModal(category.id);
+            });
+            
+            // 删除分类按钮
+            li.querySelector('.delete-category-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showDeleteModal('category', category.id, category.name);
             });
             
             // 添加子分类
@@ -504,6 +710,57 @@
                 li.appendChild(childrenUl);
             }
             
+            // 添加笔记列表
+            if (category.notes.length > 0) {
+                const notesUl = document.createElement('ul');
+                notesUl.className = 'notes-list';
+                
+                category.notes.forEach(noteId => {
+                    const note = notesData.notes.find(n => n.id === noteId);
+                    if (note) {
+                        const noteElement = createNoteElement(note);
+                        notesUl.appendChild(noteElement);
+                    }
+                });
+                
+                li.appendChild(notesUl);
+            }
+            
+            return li;
+        }
+
+        // 创建笔记元素
+        function createNoteElement(note) {
+            const li = document.createElement('li');
+            li.className = 'note-item';
+            if (note.id === notesData.currentNoteId) {
+                li.classList.add('active');
+            }
+            
+            li.innerHTML = `
+                <div class="note-info">
+                    <div class="note-title">${note.title}</div>
+                    <div class="note-date">${note.lastModified}</div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-sm btn-danger delete-note-btn" title="删除笔记"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            
+            li.dataset.noteId = note.id;
+            
+            // 点击笔记事件
+            li.addEventListener('click', function(e) {
+                e.stopPropagation();
+                displayNote(note.id);
+            });
+            
+            // 删除笔记按钮
+            li.querySelector('.delete-note-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                showDeleteModal('note', note.id, note.title);
+            });
+            
             return li;
         }
 
@@ -517,23 +774,46 @@
             
             document.getElementById('note-title').value = note.title;
             document.getElementById('note-editor').value = note.content;
+            document.getElementById('last-modified').textContent = `最后编辑: ${note.lastModified}`;
             
             // 更新预览
             updatePreview();
             
             // 更新分类树高亮
-            document.querySelectorAll('.category-item').forEach(item => {
+            document.querySelectorAll('.category-item, .note-item').forEach(item => {
                 item.classList.remove('active');
-                if (parseInt(item.dataset.categoryId) === note.categoryId) {
-                    item.classList.add('active');
-                }
             });
+            
+            // 高亮当前分类
+            const categoryItem = document.querySelector(`.category-item[data-category-id="${note.categoryId}"]`);
+            if (categoryItem) {
+                categoryItem.classList.add('active');
+            }
+            
+            // 高亮当前笔记
+            const noteItem = document.querySelector(`.note-item[data-note-id="${noteId}"]`);
+            if (noteItem) {
+                noteItem.classList.add('active');
+            }
+        }
+
+        // 清空编辑器
+        function clearEditor() {
+            document.getElementById('note-title').value = '';
+            document.getElementById('note-editor').value = '';
+            document.getElementById('last-modified').textContent = '最后编辑: --';
+            document.getElementById('note-preview').innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><p>选择或创建笔记开始编辑</p></div>';
         }
 
         // 更新预览
         function updatePreview() {
             const editor = document.getElementById('note-editor');
             const preview = document.getElementById('note-preview');
+            
+            if (editor.value.trim() === '') {
+                preview.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><p>开始编写笔记，预览将在此处显示</p></div>';
+                return;
+            }
             
             // 使用marked解析Markdown
             let htmlContent = marked.parse(editor.value);
@@ -555,11 +835,37 @@
             // 编辑器内容变化时更新预览
             document.getElementById('note-editor').addEventListener('input', updatePreview);
             
+            // 笔记标题变化时更新侧边栏
+            document.getElementById('note-title').addEventListener('input', function() {
+                if (notesData.currentNoteId) {
+                    const noteIndex = notesData.notes.findIndex(n => n.id === notesData.currentNoteId);
+                    if (noteIndex !== -1) {
+                        notesData.notes[noteIndex].title = this.value;
+                        notesData.notes[noteIndex].lastModified = new Date().toISOString().split('T')[0];
+                        
+                        // 更新侧边栏
+                        renderCategoryTree();
+                        
+                        // 重新高亮当前笔记
+                        const noteItem = document.querySelector(`.note-item[data-note-id="${notesData.currentNoteId}"]`);
+                        if (noteItem) {
+                            noteItem.classList.add('active');
+                        }
+                    }
+                }
+            });
+            
             // 保存笔记
             document.getElementById('save-note-btn').addEventListener('click', saveNote);
             
             // 新建笔记
-            document.getElementById('new-note-btn').addEventListener('click', createNewNote);
+            document.getElementById('new-note-btn').addEventListener('click', function() {
+                if (!notesData.currentCategoryId) {
+                    alert('请先选择一个分类！');
+                    return;
+                }
+                createNewNote(notesData.currentCategoryId);
+            });
             
             // 切换预览模式
             document.getElementById('toggle-preview-btn').addEventListener('click', togglePreview);
@@ -569,11 +875,21 @@
             document.getElementById('close-category-modal').addEventListener('click', hideCategoryModal);
             document.getElementById('create-category-btn').addEventListener('click', createNewCategory);
             
+            // 删除确认
+            document.getElementById('close-delete-modal').addEventListener('click', hideDeleteModal);
+            document.getElementById('cancel-delete-btn').addEventListener('click', hideDeleteModal);
+            document.getElementById('confirm-delete-btn').addEventListener('click', confirmDelete);
+            
             // 点击模态窗口外部关闭
             window.addEventListener('click', function(e) {
-                const modal = document.getElementById('category-modal');
-                if (e.target === modal) {
+                const categoryModal = document.getElementById('category-modal');
+                const deleteModal = document.getElementById('delete-modal');
+                
+                if (e.target === categoryModal) {
                     hideCategoryModal();
+                }
+                if (e.target === deleteModal) {
+                    hideDeleteModal();
                 }
             });
         }
@@ -589,31 +905,49 @@
             notesData.notes[noteIndex].content = document.getElementById('note-editor').value;
             notesData.notes[noteIndex].lastModified = new Date().toISOString().split('T')[0];
             
+            // 更新侧边栏
+            renderCategoryTree();
+            
+            // 重新高亮当前笔记
+            const noteItem = document.querySelector(`.note-item[data-note-id="${notesData.currentNoteId}"]`);
+            if (noteItem) {
+                noteItem.classList.add('active');
+            }
+            
             // 保存到本地存储
             localStorage.setItem('notesData', JSON.stringify(notesData));
             
-            alert('笔记已保存！');
+            // 显示保存成功提示
+            const saveBtn = document.getElementById('save-note-btn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-check"></i> 已保存';
+            setTimeout(() => {
+                saveBtn.innerHTML = originalText;
+            }, 2000);
         }
 
         // 创建新笔记
-        function createNewNote() {
-            if (!notesData.currentCategoryId) {
-                alert('请先选择一个分类！');
-                return;
-            }
-            
+        function createNewNote(categoryId) {
             const newNote = {
                 id: notesData.nextNoteId++,
                 title: '新笔记',
                 content: '# 新笔记\n\n开始编写您的内容...',
-                categoryId: notesData.currentCategoryId,
+                categoryId: categoryId,
                 lastModified: new Date().toISOString().split('T')[0]
             };
             
             notesData.notes.push(newNote);
-            notesData.currentNoteId = newNote.id;
             
-            // 更新显示
+            // 添加到分类
+            const categoryIndex = notesData.categories.findIndex(cat => cat.id === categoryId);
+            if (categoryIndex !== -1) {
+                notesData.categories[categoryIndex].notes.push(newNote.id);
+            }
+            
+            // 更新侧边栏
+            renderCategoryTree();
+            
+            // 显示新笔记
             displayNote(newNote.id);
             
             // 保存到本地存储
@@ -624,18 +958,21 @@
         function togglePreview() {
             const editorPanel = document.querySelector('.editor-panel');
             const previewPanel = document.querySelector('.preview-panel');
+            const toggleBtn = document.getElementById('toggle-preview-btn');
             
             if (editorPanel.style.display === 'none') {
-                editorPanel.style.display = 'block';
+                editorPanel.style.display = 'flex';
                 previewPanel.style.flex = '1';
+                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> 切换预览';
             } else {
                 editorPanel.style.display = 'none';
                 previewPanel.style.flex = '2';
+                toggleBtn.innerHTML = '<i class="fas fa-edit"></i> 切换编辑';
             }
         }
 
         // 显示分类模态窗口
-        function showCategoryModal() {
+        function showCategoryModal(parentId = null) {
             const modal = document.getElementById('category-modal');
             const parentSelect = document.getElementById('parent-category');
             
@@ -645,6 +982,9 @@
                 const option = document.createElement('option');
                 option.value = category.id;
                 option.textContent = category.name;
+                if (parentId && category.id === parentId) {
+                    option.selected = true;
+                }
                 parentSelect.appendChild(option);
             });
             
@@ -695,22 +1035,146 @@
             localStorage.setItem('notesData', JSON.stringify(notesData));
         }
 
+        // 显示删除确认模态窗口
+        function showDeleteModal(type, id, name) {
+            const modal = document.getElementById('delete-modal');
+            const title = document.getElementById('delete-title');
+            const message = document.getElementById('delete-message');
+            
+            if (type === 'category') {
+                title.textContent = '删除分类';
+                message.textContent = `您确定要删除分类 "${name}" 吗？此操作将同时删除该分类下的所有笔记和子分类，且不可撤销。`;
+            } else {
+                title.textContent = '删除笔记';
+                message.textContent = `您确定要删除笔记 "${name}" 吗？此操作不可撤销。`;
+            }
+            
+            modal.dataset.deleteType = type;
+            modal.dataset.deleteId = id;
+            modal.style.display = 'flex';
+        }
+
+        // 隐藏删除确认模态窗口
+        function hideDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'none';
+        }
+
+        // 确认删除
+        function confirmDelete() {
+            const modal = document.getElementById('delete-modal');
+            const type = modal.dataset.deleteType;
+            const id = parseInt(modal.dataset.deleteId);
+            
+            if (type === 'category') {
+                deleteCategory(id);
+            } else {
+                deleteNote(id);
+            }
+            
+            hideDeleteModal();
+        }
+
+        // 删除分类
+        function deleteCategory(categoryId) {
+            // 递归删除所有子分类和笔记
+            const deleteCategoryRecursive = (catId) => {
+                const category = notesData.categories.find(cat => cat.id === catId);
+                if (!category) return;
+                
+                // 删除所有笔记
+                category.notes.forEach(noteId => {
+                    deleteNote(noteId, false); // 不更新UI，最后统一更新
+                });
+                
+                // 递归删除子分类
+                category.children.forEach(childId => {
+                    deleteCategoryRecursive(childId);
+                });
+                
+                // 从父分类中移除
+                if (category.parentId) {
+                    const parentCategory = notesData.categories.find(cat => cat.id === category.parentId);
+                    if (parentCategory) {
+                        parentCategory.children = parentCategory.children.filter(id => id !== catId);
+                    }
+                }
+                
+                // 删除分类本身
+                notesData.categories = notesData.categories.filter(cat => cat.id !== catId);
+            };
+            
+            deleteCategoryRecursive(categoryId);
+            
+            // 如果删除的是当前分类，清空编辑器
+            if (notesData.currentCategoryId === categoryId) {
+                notesData.currentCategoryId = null;
+                notesData.currentNoteId = null;
+                clearEditor();
+            }
+            
+            // 更新侧边栏
+            renderCategoryTree();
+            
+            // 保存到本地存储
+            localStorage.setItem('notesData', JSON.stringify(notesData));
+        }
+
+        // 删除笔记
+        function deleteNote(noteId, updateUI = true) {
+            const noteIndex = notesData.notes.findIndex(n => n.id === noteId);
+            if (noteIndex === -1) return;
+            
+            const note = notesData.notes[noteIndex];
+            
+            // 从分类中移除
+            const category = notesData.categories.find(cat => cat.id === note.categoryId);
+            if (category) {
+                category.notes = category.notes.filter(id => id !== noteId);
+            }
+            
+            // 删除笔记
+            notesData.notes.splice(noteIndex, 1);
+            
+            // 如果删除的是当前笔记，清空编辑器
+            if (notesData.currentNoteId === noteId) {
+                notesData.currentNoteId = null;
+                clearEditor();
+            }
+            
+            if (updateUI) {
+                // 更新侧边栏
+                renderCategoryTree();
+                
+                // 保存到本地存储
+                localStorage.setItem('notesData', JSON.stringify(notesData));
+            }
+        }
+
         // KaTeX渲染函数
         function renderMathInElement(elem, options) {
             if (!elem) return;
             
-            const tex = elem.textContent || elem.innerText;
-            if (tex) {
+            // 查找所有数学公式
+            const displayMath = elem.querySelectorAll('script[type="math/tex; mode=display"]');
+            const inlineMath = elem.querySelectorAll('script[type="math/tex"]');
+            
+            // 渲染块级公式
+            displayMath.forEach(math => {
                 try {
-                    elem.innerHTML = tex.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                        return katex.renderToString(p1, { displayMode: true });
-                    }).replace(/\$(.*?)\$/g, (match, p1) => {
-                        return katex.renderToString(p1, { displayMode: false });
-                    });
+                    katex.render(math.textContent, math, { displayMode: true });
                 } catch (e) {
                     console.error('KaTeX渲染错误:', e);
                 }
-            }
+            });
+            
+            // 渲染行内公式
+            inlineMath.forEach(math => {
+                try {
+                    katex.render(math.textContent, math, { displayMode: false });
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                }
+            });
         }
     </script>
 </body>
